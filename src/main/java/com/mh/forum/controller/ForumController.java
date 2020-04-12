@@ -85,6 +85,13 @@ public class ForumController {
         return forumService.getCommentsByPost(id);
     }
 
+    //getLikesByPost
+    @CrossOrigin
+    @GetMapping("/post/{id}/likes")
+    public int getLikesByPost(@PathVariable String id) {
+        return forumService.getLikesByPost(id);
+    }
+
     @CrossOrigin
     @GetMapping("/comments/creator/{creator}")
     public Iterable<CommentDto> getCommentsByCreator(@PathVariable String creator) {

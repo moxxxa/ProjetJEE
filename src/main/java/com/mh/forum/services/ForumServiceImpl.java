@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ForumServiceImpl implements ForumService {
@@ -88,11 +89,28 @@ public class ForumServiceImpl implements ForumService {
         return comments.stream().map(this::convertToCommentDto).collect(Collectors.toList());
     }
 
+
+
+
     @Override
     public Iterable<CommentDto> getCommentsByUser(String creator) {
         return commentRepositry.findCommentByUserEmail(creator)
                 .map(this::convertToCommentDto)
                 .collect(Collectors.toList());
+    }
+
+    /*
+        @Override
+        public Iterable<CommentDto> getLikesByPost(String id) {
+            Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+            Set<Comment> comments = post.getComments();
+            return comments.stream().map(this::convertToCommentDto).collect(Collectors.toList());
+        }*/
+    @Override
+    public int getLikesByPost(String id) {
+        Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+        int likes = post.getLikes();
+        return likes;
     }
 
     @Override

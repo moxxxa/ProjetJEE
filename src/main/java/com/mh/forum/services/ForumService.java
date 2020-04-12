@@ -8,6 +8,7 @@ import com.mh.forum.entity.Category;
 import com.mh.forum.entity.Post;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public interface ForumService {
@@ -30,7 +31,7 @@ public interface ForumService {
 
     Iterable<CommentDto> getCommentsByUser(String creator);
 
-
+    int getLikesByPost(String  id);
     PostDto deletePost(String id);
 
     PostDto updatePost(AddPostDto updatePostDto, String id);
