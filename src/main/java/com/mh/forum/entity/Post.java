@@ -29,14 +29,17 @@ public class Post {
     LocalDateTime dateCreate;
     int likes;
     Set<Comment> comments;
-    User creator;
+    //User creator;
+    @Setter
+    String category;
 
-    public Post(String userEmail, String subject, String content) {
+    public Post(String userEmail, String subject, String content, String category) {
         this.userEmail = userEmail;
         this.subject = subject;
         this.content = content;
         this.dateCreate = LocalDateTime.now();
         comments = new HashSet<Comment>(0);
+        this.category = category;
     }
 
     public void addLike() {

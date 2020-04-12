@@ -23,4 +23,5 @@ public class PostDto {
     Integer likes;
     @Singular
     List<CommentDto> comments;
+    String category;
 }

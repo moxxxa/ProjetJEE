@@ -8,6 +8,7 @@ import lombok.Getter;
 public class AddPostDto {
      String subject;
      String content;
+     String category;
 
   /*   public String getSubject(){
           return subject;

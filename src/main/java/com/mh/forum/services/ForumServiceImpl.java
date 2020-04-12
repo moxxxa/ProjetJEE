@@ -1,11 +1,13 @@
 package com.mh.forum.services;
 
+import com.mh.forum.dao.CategoryRepository;
 import com.mh.forum.dao.CommentRepositry;
 import com.mh.forum.dao.ForumRepository;
 import com.mh.forum.dto.AddCommentDto;
 import com.mh.forum.dto.AddPostDto;
 import com.mh.forum.dto.CommentDto;
 import com.mh.forum.dto.PostDto;
+import com.mh.forum.entity.Category;
 import com.mh.forum.entity.Comment;
 import com.mh.forum.entity.Post;
 
@@ -13,6 +15,7 @@ import com.mh.forum.exceptions.PostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,12 +24,15 @@ public class ForumServiceImpl implements ForumService {
 
     @Autowired
     ForumRepository forumRepository;
+    @Autowired
     CommentRepositry commentRepositry;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Override
     public PostDto addPost(AddPostDto addPostDto, String creator) {
 
-        Post post = new Post(creator, addPostDto.getSubject(), addPostDto.getContent());
+        Post post = new Post(creator, addPostDto.getSubject(), addPostDto.getContent(), addPostDto.getCategory());
         post = forumRepository.save(post);
         return convertToPostDto(post);
     }
@@ -61,11 +67,19 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
+    public Iterable<PostDto> getPostsByCategory(String category) {
+        return forumRepository.findPostsByCategory(category)
+                .map(this::convertToPostDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Iterable<PostDto> getPosts() {
         return forumRepository.findAllByOrderByDateCreateDesc()
                 .map(this::convertToPostDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Iterable<CommentDto> getCommentsByPost(String id) {
@@ -116,12 +130,27 @@ public class ForumServiceImpl implements ForumService {
         return false;
     }
 
+    /*@Override
+    public Category addCategory(Category category) {
+        return categoryRepository.save(category);
+    }*/
+
+    @Override
+    public List<Category> getCategories() {
+        return categoryRepository.findAll();
+    }
+
 
     private PostDto convertToPostDto(Post post) {
-        return PostDto.builder().idPost(post.getIdPost()).userEmail(post.getUserEmail()).subject(post.getSubject())
-                .dateCreate(post.getDateCreate()).content(post.getContent())
+        return PostDto.builder()
+                .idPost(post.getIdPost())
+                .userEmail(post.getUserEmail())
+                .subject(post.getSubject())
+                .dateCreate(post.getDateCreate())
+                .content(post.getContent())
                 .likes(post.getLikes())
                 .comments(post.getComments().stream().map(this::convertToCommentDto).collect(Collectors.toList()))
+                .category(post.getCategory())
                 .build();
     }
 

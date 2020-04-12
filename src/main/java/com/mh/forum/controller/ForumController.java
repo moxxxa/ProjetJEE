@@ -5,9 +5,12 @@ import com.mh.forum.dto.AddCommentDto;
 import com.mh.forum.dto.AddPostDto;
 import com.mh.forum.dto.CommentDto;
 import com.mh.forum.dto.PostDto;
+import com.mh.forum.entity.Category;
 import com.mh.forum.services.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/forum")
@@ -22,13 +25,7 @@ public class ForumController {
         return forumService.addPost(addPost, author);
     }
 
-
-  /*  @PostMapping("/comment/{creator}")
-    //@PreAuthorize("#author==authentication.name")
-    public CommentDto addC(@RequestBody AddCommentDto addC, @PathVariable("creator") String author) {
-        return forumService.addC(addC, author);
-    }*/
-  @CrossOrigin
+    @CrossOrigin
     @PutMapping("/post/{id}/comment/{creator}")
     public PostDto addComment(@PathVariable String id, @PathVariable String creator, @RequestBody AddCommentDto addCommentDto) {
         return forumService.addComment(id, addCommentDto, creator);
@@ -44,6 +41,12 @@ public class ForumController {
     @GetMapping("/posts")
     public Iterable<PostDto> getPosts() {
         return forumService.getPosts();
+    }
+
+    @CrossOrigin
+    @GetMapping("/categories")
+    public List<Category> getCategories() {
+        return forumService.getCategories();
     }
 
     @CrossOrigin
@@ -71,6 +74,12 @@ public class ForumController {
     }
 
     @CrossOrigin
+    @GetMapping("/posts/category/{category}")
+    public Iterable<PostDto> findPostsByCategory(@PathVariable String category) {
+        return forumService.getPostsByCategory(category);
+    }
+
+    @CrossOrigin
     @GetMapping("/post/{id}/comments")
     public Iterable<CommentDto> getCommentsByPost(@PathVariable String id) {
         return forumService.getCommentsByPost(id);
@@ -81,5 +90,9 @@ public class ForumController {
     public Iterable<CommentDto> getCommentsByCreator(@PathVariable String creator) {
         return forumService.getCommentsByUser(creator);
     }
-
+ /*  @PostMapping("/comment/{creator}")
+    //@PreAuthorize("#author==authentication.name")
+    public CommentDto addC(@RequestBody AddCommentDto addC, @PathVariable("creator") String author) {
+        return forumService.addC(addC, author);
+    }*/
 }
