@@ -97,6 +97,8 @@ public class ForumController {
     public Iterable<CommentDto> getCommentsByCreator(@PathVariable String creator) {
         return forumService.getCommentsByUser(creator);
     }
+
+
  /*  @PostMapping("/comment/{creator}")
     //@PreAuthorize("#author==authentication.name")
     public CommentDto addC(@RequestBody AddCommentDto addC, @PathVariable("creator") String author) {

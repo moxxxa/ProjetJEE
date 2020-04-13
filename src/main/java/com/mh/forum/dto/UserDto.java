@@ -5,19 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserDto {
-
-
     String idUser;
-    String password;
+    //String password;
     String email;
     String firstName;
     String lastName;

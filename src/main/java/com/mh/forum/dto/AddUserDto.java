@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class AddUserDto {
-     String password;
      String email;
+     String password;
      String firstName;
      String lastName;
      //byte[] profilePicture;

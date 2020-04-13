@@ -15,6 +15,7 @@ public interface ForumRepository extends MongoRepository<Post,String> {
     Stream<Post> findAllByOrderByDateCreateDesc();
     Stream<Post> findPostsByUserEmail(String userEmail);
     Stream<Post> findPostsByCategory(String category);
+
     // public List<Post> findByUserEmailId(String userEmailId);
 /*    Stream<Post> findbyUser(String user);
     List<Post> findAllByOrderByDatePost();

@@ -29,7 +29,7 @@ public interface ForumService {
 
     Iterable<CommentDto> getCommentsByPost(String id);
 
-    Iterable<CommentDto> getCommentsByUser(String creator);
+    Iterable<CommentDto> getCommentsByUser(String userEmail);
 
     int getLikesByPost(String  id);
     PostDto deletePost(String id);

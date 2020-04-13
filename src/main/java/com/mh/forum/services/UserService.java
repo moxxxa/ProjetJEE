@@ -5,9 +5,9 @@ import com.mh.forum.dto.UserDto;
 
 public interface UserService {
 
-    UserDto addPost(AddUserDto addUserDto);
+    UserDto addUser(AddUserDto addUserDto);
 
-    UserDto login(String login);
+    UserDto login(String idUser);
 
     UserDto deleteUser(String login);
 

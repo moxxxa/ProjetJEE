@@ -13,6 +13,7 @@ import com.mh.forum.entity.Post;
 
 import com.mh.forum.exceptions.PostNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,6 @@ public class ForumServiceImpl implements ForumService {
     CommentRepositry commentRepositry;
     @Autowired
     CategoryRepository categoryRepository;
-
     @Override
     public PostDto addPost(AddPostDto addPostDto, String creator) {
 
@@ -89,12 +89,9 @@ public class ForumServiceImpl implements ForumService {
         return comments.stream().map(this::convertToCommentDto).collect(Collectors.toList());
     }
 
-
-
-
     @Override
-    public Iterable<CommentDto> getCommentsByUser(String creator) {
-        return commentRepositry.findCommentByUserEmail(creator)
+    public Iterable<CommentDto> getCommentsByUser(String userEmail) {
+        return commentRepositry.findCommentByUserEmail(userEmail)
                 .map(this::convertToCommentDto)
                 .collect(Collectors.toList());
     }
