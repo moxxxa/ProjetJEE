@@ -1,4 +1,4 @@
-package com.mh.forum.services.security;
+package com.mh.forum.services;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

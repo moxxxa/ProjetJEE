@@ -10,10 +10,7 @@ import com.mh.forum.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -23,15 +20,19 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
     @PostMapping("/create")
     public UserDto create(@RequestBody AddUserDto addUserDto) {
         return userService.addUser(addUserDto);
     }
 
+    @PostMapping("/login")
+    public UserDto login(@RequestHeader("Authorization") String token) {
+        return userService.login(token );
+    }
 /*    @PostMapping("/login")
     public UserDto login(Authentication authentication) {
         return userService.login(authentication.getName());
     }*/
+
 
 }

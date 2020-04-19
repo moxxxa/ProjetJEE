@@ -25,12 +25,11 @@ import java.util.Set;
 //@JsonSerialize(using = ToStringSerializer.class)
 @Document(collection = "users")
 public class User {
-    @Id
-    String idUser;
-   // @Id
+    //String idUser;
+    // @Id
     @NotBlank
-    //@Size(max = 120)
-            String email;
+    @Id
+    String email;
 
     @NotBlank
     //@Size(max = 120)

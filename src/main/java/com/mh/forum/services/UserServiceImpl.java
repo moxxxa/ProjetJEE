@@ -4,9 +4,7 @@ import com.mh.forum.dao.UserRepository;
 import com.mh.forum.dto.AddUserDto;
 import com.mh.forum.dto.UserDto;
 import com.mh.forum.entity.User;
-import com.mh.forum.exceptions.PostNotFoundException;
-import com.mh.forum.exceptions.UserExistsException;
-import com.mh.forum.exceptions.UserNotFoundException;
+import com.mh.forum.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,7 +40,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto login(String idUser) {
-        User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));;
+
+        UserAuthentication userAuthentication=
+                userConfig.tokenDecode(idUser);
+        User user = userRepository.findById(userAuthentication.getEmail())
+                .orElseThrow(() -> new UserAuthenticationException());
+        if(!userAuthentication.getPassword().equals(user.getPassword())){
+            throw new ForbiddenException();
+        }
+       // User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));;
         return userToUserDto(user);
     }
 
@@ -54,7 +60,6 @@ public class UserServiceImpl implements UserService {
 
     private UserDto userToUserDto(User user) {
         return UserDto.builder()
-                .idUser(user.getIdUser())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
