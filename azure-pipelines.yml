@@ -10,9 +10,9 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '340ca624-6709-4981-a921-2051f8b4c246'
-  imageRepository: 'mhichriprojetjee'
-  containerRegistry: 'jeeimages.azurecr.io'
+  dockerRegistryServiceConnection: 'e4e23306-b60d-454a-b95e-3c5ca021aaf8'
+  imageRepository: 'projetjeegit'
+  containerRegistry: 'jeeimageback.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
   
@@ -36,4 +36,4 @@ stages:
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          1
+          51

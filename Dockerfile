@@ -10,7 +10,7 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
 #
-# Package stage
+# Package stage V2
 #
 FROM openjdk:11-jre-slim
 COPY --from=build /home/app/target/jeeback.jar /usr/local/lib/demo.jar
