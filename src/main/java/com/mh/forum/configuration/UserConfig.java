@@ -18,7 +18,7 @@ public class UserConfig {
     public UserAuthentication tokenDecode(String token) {
         try {
             int pos = token.indexOf(" ");
-            
+
             token = token.substring(pos + 1);
             String credential = new String(Base64.getDecoder().decode(token));
             String[] credentials = credential.split(":");
