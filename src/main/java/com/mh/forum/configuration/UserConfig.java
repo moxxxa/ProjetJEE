@@ -1,7 +1,8 @@
 package com.mh.forum.configuration;
 
 import com.mh.forum.exceptions.UserAuthenticationException;
-import com.mh.forum.services.UserAuthentication;
+
+import com.mh.forum.user.services.UserAuthentication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jmx.export.annotation.ManagedResource;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

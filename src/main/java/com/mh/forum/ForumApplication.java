@@ -1,10 +1,8 @@
 package com.mh.forum;
 
-import com.mh.forum.dao.CategoryRepository;
-import com.mh.forum.dao.UserRepository;
-import com.mh.forum.entity.Category;
-
-import com.mh.forum.entity.User;
+import com.mh.forum.category.dao.CategoryRepository;
+import com.mh.forum.category.model.Category;
+import com.mh.forum.user.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootApplication
-public class ForumApplication{
+public class ForumApplication {
 
     @Autowired
     UserRepository userRepository;
@@ -25,6 +23,7 @@ public class ForumApplication{
     PasswordEncoder passwordEncoder;*/
 
     public static void main(String[] args) {
+
         SpringApplication.run(ForumApplication.class, args);
     }
 
@@ -45,21 +44,21 @@ public class ForumApplication{
     }
 */
 
-    @Bean
-    CommandLineRunner runner(CategoryRepository categoryRepository) {
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... args) throws Exception {
-                categoryRepository.deleteAll();
-                categoryRepository.saveAll(
-                        List.of(
-                                new Category("Science"),
-                                new Category("Space"),
-                                new Category("Technologie")
-                        )
-                );
-
-            }
-        };
-    }
+//    @Bean
+//    CommandLineRunner runner(CategoryRepository categoryRepository) {
+//        return new CommandLineRunner() {
+//            @Override
+//            public void run(String... args) throws Exception {
+//                categoryRepository.deleteAll();
+//                categoryRepository.saveAll(
+//                        List.of(
+//                                new Category("Science"),
+//                                new Category("Space"),
+//                                new Category("Technologie")
+//                        )
+//                );
+//
+//            }
+//        };
+//    }
 }
