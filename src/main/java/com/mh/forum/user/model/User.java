@@ -23,6 +23,10 @@ public class User {
     @Id
     String email;
 
+    public String getPassword() {
+        return password;
+    }
+
     @NotBlank
     //@Size(max = 120)
             String password;
