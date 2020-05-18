@@ -7,7 +7,7 @@ public interface UserService {
 
     UserDto addUser(AddUserDto addUserDto);
 
-    UserDto login(UserLoginDto userLoginDto);
+    UserDto login(String idUser);
 
     UserDto deleteUser(String login);
 
