@@ -8,7 +8,6 @@ import com.mh.forum.exceptions.UserExistsException;
 import com.mh.forum.user.dao.UserRepository;
 import com.mh.forum.user.dto.AddUserDto;
 import com.mh.forum.user.dto.UserDto;
-import com.mh.forum.user.dto.UserLoginDto;
 import com.mh.forum.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,24 +42,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto login(UserLoginDto userLoginDto) {
+    public UserDto login(String idUser) {
 
         UserAuthentication userAuthentication= userConfig.tokenDecode(idUser);
-        User user = userRepository.findById(userLoginDto.getEmail())
+        User user = userRepository.findById(userAuthentication.getEmail())
                 .orElseThrow(() -> new UserAuthenticationException());
-        if(!userLoginDto.getPassword().equals(user.getPassword())){
+        if(!userAuthentication.getPassword().equals(user.getPassword())){
             throw new ForbiddenException();
         }
-       // User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));;
-
-        //In order to implement the front-side, we need to return the user with the authentification token, here's an example
-        /*
-            {
-                firstName: ,
-                lastName: ,
-                token:
-            }
-         */
+        // User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));;
         return userToUserDto(user);
     }
 
