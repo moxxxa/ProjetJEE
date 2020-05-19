@@ -32,11 +32,14 @@ public class Post {
     //User creator;
     @Setter
     String category;
+    @Setter
+    String name;
 
-    public Post(String userEmail, String subject, String content, String category) {
+    public Post(String userEmail, String subject, String content, String category, String name) {
         this.userEmail = userEmail;
         this.subject = subject;
         this.content = content;
+        this.name = name;
         this.dateCreate = LocalDateTime.now();
         comments = new HashSet<Comment>(0);
         this.category = category;

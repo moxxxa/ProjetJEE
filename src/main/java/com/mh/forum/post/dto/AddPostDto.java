@@ -8,6 +8,15 @@ public class AddPostDto {
      String subject;
      String content;
      String category;
+     String name;
+
+     public String getName() {
+          return name;
+     }
+
+     public void setName(String name) {
+          this.name = name;
+     }
 
   /*   public String getSubject(){
           return subject;

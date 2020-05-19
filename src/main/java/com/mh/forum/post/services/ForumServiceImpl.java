@@ -32,7 +32,7 @@ public class ForumServiceImpl implements ForumService {
     @Override
     public PostDto addPost(AddPostDto addPostDto, String creator) {
 
-        Post post = new Post(creator, addPostDto.getSubject(), addPostDto.getContent(), addPostDto.getCategory());
+        Post post = new Post(creator, addPostDto.getSubject(), addPostDto.getContent(), addPostDto.getCategory(), addPostDto.getName());
         post = forumRepository.save(post);
         return convertToPostDto(post);
     }
@@ -170,6 +170,7 @@ public class ForumServiceImpl implements ForumService {
                 .idPost(post.getIdPost())
                 .userEmail(post.getUserEmail())
                 .subject(post.getSubject())
+                .name(post.getName())
                 .dateCreate(post.getDateCreate())
                 .content(post.getContent())
                 .likes(post.getLikes())
