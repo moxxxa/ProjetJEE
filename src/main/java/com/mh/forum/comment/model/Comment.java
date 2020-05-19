@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Comment {
     //@Id
     //String idComment;
+    String owner;
     String userEmail;
     @Setter
     String content;
@@ -25,9 +26,18 @@ public class Comment {
     LocalDateTime dateCreate;
 
 
-    public Comment(String userEmail, String content) {
+    public Comment(String userEmail, String content, String owner) {
         this.userEmail = userEmail;
         this.content = content;
         dateCreate = LocalDateTime.now();
+        this.owner = owner;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

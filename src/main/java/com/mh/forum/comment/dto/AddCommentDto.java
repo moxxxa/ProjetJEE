@@ -6,6 +6,15 @@ import lombok.Getter;
 @Getter
 public class AddCommentDto {
     String content;
+    String owner;
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
   /*  public String getContent(){
         return  content;

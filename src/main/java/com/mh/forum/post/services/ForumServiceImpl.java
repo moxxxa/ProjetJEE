@@ -47,7 +47,7 @@ public class ForumServiceImpl implements ForumService {
     @Override
     public PostDto addComment(String id, AddCommentDto addCommentDto, String creator) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        Comment comment = new Comment(creator, addCommentDto.getContent());
+        Comment comment = new Comment(creator, addCommentDto.getContent(), addCommentDto.getOwner());
         post.addComment(comment);
         forumRepository.save(post);
         return convertToPostDto(post);
@@ -181,7 +181,7 @@ public class ForumServiceImpl implements ForumService {
 
     private CommentDto convertToCommentDto(Comment comment) {
         return CommentDto.builder().userEmail(comment.getUserEmail()).content(comment.getContent())
-                .dateCreate(comment.getDateCreate()).build();
+                .dateCreate(comment.getDateCreate()).owner(comment.getOwner()).build();
     }
 
 }

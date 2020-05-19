@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public PostDto addComment(String id, AddCommentDto addCommentDto, String creator) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        Comment comment = new Comment(creator, addCommentDto.getContent());
+        Comment comment = new Comment(creator, addCommentDto.getContent(), addCommentDto.getOwner());
         post.addComment(comment);
         forumRepository.save(post);
         return convertToPostDto(post);
@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
     }*/
 
     private CommentDto convertToCommentDto(Comment comment) {
-        return CommentDto.builder().userEmail(comment.getUserEmail()).content(comment.getContent())
+        return CommentDto.builder().userEmail(comment.getUserEmail()).content(comment.getContent()).owner(comment.getOwner())
                 .dateCreate(comment.getDateCreate()).build();
     }
 
