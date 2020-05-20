@@ -14,7 +14,6 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @CrossOrigin
     @GetMapping("/categories")
     public List<Category> getCategories() {
         return categoryService.getCategories();

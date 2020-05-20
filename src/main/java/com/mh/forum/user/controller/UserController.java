@@ -17,13 +17,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @CrossOrigin
     @PostMapping("/create")
     public UserDto create(@RequestBody AddUserDto addUserDto) {
         return userService.addUser(addUserDto);
     }
 
-    @CrossOrigin
     @PostMapping("/login")
     public UserDto login(@RequestHeader("Authorization") String token) {
         return userService.login(token);

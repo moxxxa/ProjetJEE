@@ -12,14 +12,11 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-
-    @CrossOrigin
     @GetMapping("/post/{id}/comments")
     public Iterable<CommentDto> getCommentsByPost(@PathVariable String id) {
         return commentService.getCommentsByPost(id);
     }
 
-    @CrossOrigin
     @GetMapping("/comments/creator/{creator}")
     public Iterable<CommentDto> getCommentsByCreator(@PathVariable String creator) {
         return commentService.getCommentsByUser(creator);
