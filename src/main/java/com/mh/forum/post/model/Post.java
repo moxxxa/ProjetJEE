@@ -3,12 +3,16 @@ package com.mh.forum.post.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mh.forum.comment.model.Comment;
+import com.mh.forum.like.model.Like;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,41 +24,50 @@ import java.util.Set;
 public class Post {
     @Id
     String idPost;
-    String userEmail;
+    String idUser;
     @Setter
     String subject;
     @Setter
     String content;
+    @Setter
+    String creator;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime dateCreate;
-    int likes;
+    int likesCount;
     Set<Comment> comments;
-    //User creator;
+    //Set<Like> likes;
+    List<Like> likes;
     @Setter
     String category;
-    @Setter
-    String name;
 
-    public Post(String userEmail, String subject, String content, String category, String name) {
-        this.userEmail = userEmail;
+
+    public Post(String subject, String content, String category, String creator, String idUser) {
+        this.idUser = idUser;
         this.subject = subject;
         this.content = content;
-        this.name = name;
+        this.creator = creator;
         this.dateCreate = LocalDateTime.now();
         comments = new HashSet<Comment>(0);
+        likes = new ArrayList<Like>();
+        //likes = new HashSet<Like>(0);
         this.category = category;
+
     }
 
     public void addLike() {
-        likes++;
+        likesCount++;
     }
 
     public void dislike() {
-        likes--;
+        likesCount--;
     }
 
     public boolean addComment(Comment comment) {
 
         return comments.add(comment);
+    }
+
+    public boolean addLikes(Like like) {
+        return likes.add(like);
     }
 }

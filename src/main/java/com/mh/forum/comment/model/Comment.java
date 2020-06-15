@@ -17,7 +17,8 @@ public class Comment {
     //@Id
     //String idComment;
     String owner;
-    String userEmail;
+    String idUser;
+    String creator;
     @Setter
     String content;
     //@DBRef
@@ -26,9 +27,10 @@ public class Comment {
     LocalDateTime dateCreate;
 
 
-    public Comment(String userEmail, String content, String owner) {
-        this.userEmail = userEmail;
+    public Comment(String idUser, String creator, String content, String owner) {
+        this.idUser = idUser;
         this.content = content;
+        this.creator = creator;
         dateCreate = LocalDateTime.now();
         this.owner = owner;
     }

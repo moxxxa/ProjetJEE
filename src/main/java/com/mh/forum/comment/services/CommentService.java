@@ -10,7 +10,7 @@ import java.util.List;
 public interface CommentService {
 
 
-    PostDto addComment(String id, AddCommentDto addCommentDto, String creator);
+    //PostDto addComment(String id, AddCommentDto addCommentDto, String creator);
 
     Iterable<CommentDto> getCommentsByPost(String id);
 

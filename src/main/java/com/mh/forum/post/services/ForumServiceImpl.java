@@ -7,10 +7,15 @@ import com.mh.forum.comment.dto.AddCommentDto;
 import com.mh.forum.comment.dto.CommentDto;
 import com.mh.forum.comment.model.Comment;
 import com.mh.forum.exceptions.PostNotFoundException;
+import com.mh.forum.like.dao.LikeRepository;
+import com.mh.forum.like.dto.LikeDto;
+import com.mh.forum.like.model.Like;
 import com.mh.forum.post.dao.ForumRepository;
 import com.mh.forum.post.dto.AddPostDto;
 import com.mh.forum.post.dto.PostDto;
 import com.mh.forum.post.model.Post;
+import com.mh.forum.user.dao.UserRepository;
+import com.mh.forum.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +28,27 @@ import java.util.stream.Collectors;
 @Service
 public class ForumServiceImpl implements ForumService {
 
+
     @Autowired
     ForumRepository forumRepository;
     @Autowired
     CommentRepositry commentRepositry;
     @Autowired
     CategoryRepository categoryRepository;
-    @Override
-    public PostDto addPost(AddPostDto addPostDto, String creator) {
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    LikeRepository likeRepository;
 
-        Post post = new Post(creator, addPostDto.getSubject(), addPostDto.getContent(), addPostDto.getCategory(), addPostDto.getName());
+
+    @Override
+    public PostDto addPost(AddPostDto addPostDto, String creator, String idUser) {
+        Post post = new Post(addPostDto.getSubject(),
+                addPostDto.getContent(),
+                addPostDto.getCategory(),
+                creator,
+                idUser);
+        //Post post = new Post(creator,idUser, addPostDto.getSubject(), addPostDto.getContent(), addPostDto.getCategory(), addPostDto.getName());
         post = forumRepository.save(post);
         return convertToPostDto(post);
     }
@@ -45,9 +61,10 @@ public class ForumServiceImpl implements ForumService {
     }*/
 
     @Override
-    public PostDto addComment(String id, AddCommentDto addCommentDto, String creator) {
+    public PostDto addComment(String id, AddCommentDto addCommentDto, String creator, String idUser) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        Comment comment = new Comment(creator, addCommentDto.getContent(), addCommentDto.getOwner());
+        Comment comment = new Comment(idUser, creator, addCommentDto.getContent(), addCommentDto.getOwner());
+        System.out.println("*************comment in service ***********" + comment);
         post.addComment(comment);
         forumRepository.save(post);
         return convertToPostDto(post);
@@ -61,7 +78,7 @@ public class ForumServiceImpl implements ForumService {
 
     @Override
     public Iterable<PostDto> getPostsByUser(String creator) {
-        return forumRepository.findPostsByUserEmail(creator)
+        return forumRepository.findPostsByIdUser(creator)
                 .map(this::convertToPostDto)
                 .collect(Collectors.toList());
     }
@@ -89,8 +106,8 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public Iterable<CommentDto> getCommentsByUser(String userEmail) {
-        return commentRepositry.findCommentByUserEmail(userEmail)
+    public Iterable<CommentDto> getCommentsByUser(String idUser) {
+        return commentRepositry.findCommentByIdUser(idUser)
                 .map(this::convertToCommentDto)
                 .collect(Collectors.toList());
     }
@@ -105,7 +122,7 @@ public class ForumServiceImpl implements ForumService {
     @Override
     public int getLikesByPost(String id) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        int likes = post.getLikes();
+        int likes = post.getLikesCount();
         return likes;
     }
 
@@ -133,16 +150,25 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public boolean addLike(String id) {
-
-        Post post = forumRepository.findById(id).orElse(null);
-        if (null != post) {
-            post.addLike();
-            forumRepository.save(post);
-            return true;
+    public boolean addLike(String idPost, String idUser) {
+        User user = userRepository.findById(idUser).orElse(null);
+        Post post = forumRepository.findById(idPost).orElse(null);
+        List<Like> likes = post.getLikes();
+        if (!likes.isEmpty()) {
+            for (int i = 0; i < likes.size(); i++) {
+                if (likes.get(i).getUser().getIdUser().equals(user.getIdUser())) {
+                    return false;
+                }
+            }
         }
-        return false;
+        Like like = new Like(user);
+        likeRepository.save(like);//save like
+        post.addLike();// increment likesCount
+        post.addLikes(like);// add like to this post
+        forumRepository.save(post);//save post
+        return true;
     }
+
     @Override
     public boolean dislike(String id) {
 
@@ -168,20 +194,25 @@ public class ForumServiceImpl implements ForumService {
     private PostDto convertToPostDto(Post post) {
         return PostDto.builder()
                 .idPost(post.getIdPost())
-                .userEmail(post.getUserEmail())
+                .idUser(post.getIdUser())
                 .subject(post.getSubject())
-                .name(post.getName())
+                .creator(post.getCreator())
                 .dateCreate(post.getDateCreate())
                 .content(post.getContent())
-                .likes(post.getLikes())
+                .likesCount(post.getLikesCount())
                 .comments(post.getComments().stream().map(this::convertToCommentDto).collect(Collectors.toList()))
                 .category(post.getCategory())
+                .likes(post.getLikes().stream().map(this::convertToLikeDto).collect(Collectors.toList()))
                 .build();
     }
 
     private CommentDto convertToCommentDto(Comment comment) {
-        return CommentDto.builder().userEmail(comment.getUserEmail()).content(comment.getContent())
+        return CommentDto.builder().idUser(comment.getIdUser()).content(comment.getContent())
                 .dateCreate(comment.getDateCreate()).owner(comment.getOwner()).build();
+    }
+
+    private LikeDto convertToLikeDto(Like like) {
+        return LikeDto.builder().user(like.getUser()).build();
     }
 
 }

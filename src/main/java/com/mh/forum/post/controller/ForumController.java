@@ -18,15 +18,15 @@ public class ForumController {
     @Autowired
     ForumService forumService;
 
-    @PostMapping("/post/{creator}")
+    @PostMapping("/post/{creator}/{idUser}")
     //@PreAuthorize("#author==authentication.name")
-    public PostDto addPost(@RequestBody AddPostDto addPost, @PathVariable("creator") String author) {
-        return forumService.addPost(addPost, author);
+    public PostDto addPost(@RequestBody AddPostDto addPost, @PathVariable("creator") String creator, @PathVariable("idUser") String idUser) {
+        return forumService.addPost(addPost, creator, idUser);
     }
 
-    @PutMapping("/post/{id}/comment/{creator}")
-    public PostDto addComment(@PathVariable String id, @PathVariable String creator, @RequestBody AddCommentDto addCommentDto) {
-        return forumService.addComment(id, addCommentDto, creator);
+    @PutMapping("/post/{id}/comment/{creator}/{idUser}")
+    public PostDto addComment(@PathVariable String id, @PathVariable String creator, @PathVariable String idUser, @RequestBody AddCommentDto addCommentDto) {
+        return forumService.addComment(id, addCommentDto, creator, idUser);
     }
 
     @GetMapping("/post/{id}")
@@ -49,14 +49,18 @@ public class ForumController {
         return forumService.updatePost(postUpdateDto, id);
     }
 
-    @PutMapping("/post/{id}/like")
-    public boolean addLike(@PathVariable String id) {
-        return forumService.addLike(id);
+    @PutMapping("/post/{idPost}/{idUser}/like")
+    public boolean addLike(@PathVariable String idPost, @PathVariable String idUser) {
+        return forumService.addLike(idPost, idUser);
     }
+//    @PutMapping("/post/{id}/like")
+//    public boolean addLike(@PathVariable String id) {
+//        return forumService.addLike(id);
+//    }
 
     @PutMapping("/post/{id}/dislike")
     public boolean dislike(@PathVariable String id) {
-        return forumService.addLike(id);
+        return forumService.dislike(id);
     }
 
     @GetMapping("/posts/creator/{creator}")

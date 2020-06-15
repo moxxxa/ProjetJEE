@@ -31,14 +31,15 @@ public class CommentServiceImpl implements CommentService {
         return convertToCommentDto(comment);
     }*/
 
-    @Override
-    public PostDto addComment(String id, AddCommentDto addCommentDto, String creator) {
-        Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        Comment comment = new Comment(creator, addCommentDto.getContent(), addCommentDto.getOwner());
-        post.addComment(comment);
-        forumRepository.save(post);
-        return convertToPostDto(post);
-    }
+//    @Override
+//    public PostDto addComment(String id, AddCommentDto addCommentDto,String creator, String idUser){
+//        //public PostDto addComment(String id, AddCommentDto addCommentDto, String creator) {
+//        Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+//        Comment comment = new Comment(idUser,creator, addCommentDto.getContent(), addCommentDto.getOwner());
+//        post.addComment(comment);
+//        forumRepository.save(post);
+//        return convertToPostDto(post);
+//    }
 
 
     @Override
@@ -49,8 +50,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Iterable<CommentDto> getCommentsByUser(String userEmail) {
-        return commentRepositry.findCommentByUserEmail(userEmail)
+    public Iterable<CommentDto> getCommentsByUser(String idUser) {
+        return commentRepositry.findCommentByIdUser(idUser)
                 .map(this::convertToCommentDto)
                 .collect(Collectors.toList());
     }
@@ -82,18 +83,18 @@ public class CommentServiceImpl implements CommentService {
     }*/
 
     private CommentDto convertToCommentDto(Comment comment) {
-        return CommentDto.builder().userEmail(comment.getUserEmail()).content(comment.getContent()).owner(comment.getOwner())
+        return CommentDto.builder().idUser(comment.getIdUser()).content(comment.getContent()).owner(comment.getOwner())
                 .dateCreate(comment.getDateCreate()).build();
     }
 
     private PostDto convertToPostDto(Post post) {
         return PostDto.builder()
                 .idPost(post.getIdPost())
-                .userEmail(post.getUserEmail())
+                .idUser(post.getIdUser())
                 .subject(post.getSubject())
                 .dateCreate(post.getDateCreate())
                 .content(post.getContent())
-                .likes(post.getLikes())
+                .likesCount(post.getLikesCount())
                 .comments(post.getComments().stream().map(this::convertToCommentDto).collect(Collectors.toList()))
                 .category(post.getCategory())
                 .build();

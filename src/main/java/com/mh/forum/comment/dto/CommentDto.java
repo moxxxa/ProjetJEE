@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class CommentDto {
     //String idComment;
     String owner;
-    String userEmail;
+    String idUser;
     String content;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime dateCreate;

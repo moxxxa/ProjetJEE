@@ -41,13 +41,17 @@ public class UserServiceImpl implements UserService {
             return userToUserDto(user);
     }
 
-    @Override
-    public UserDto login(String idUser) {
+    public UserDto login(String token) {
 
-        UserAuthentication userAuthentication= userConfig.tokenDecode(idUser);
-        User user = userRepository.findById(userAuthentication.getEmail())
-                .orElseThrow(() -> new UserAuthenticationException());
-        if(!userAuthentication.getPassword().equals(user.getPassword())){
+        UserAuthentication userAuthentication = userConfig.tokenDecode(token);
+
+        //User user = userRepository.findById(userAuthentication.getEmail()).orElseThrow(() -> new UserAuthenticationException());
+        User user = userRepository.findUserByEmail(userAuthentication.getEmail());
+        if (null == user) {
+            throw new UserAuthenticationException();
+        }
+
+        if (!userAuthentication.getPassword().equals(user.getPassword())) {
             throw new ForbiddenException();
         }
         // User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));;
@@ -62,6 +66,7 @@ public class UserServiceImpl implements UserService {
 
     private UserDto userToUserDto(User user) {
         return UserDto.builder()
+                .idUser(user.getIdUser())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())

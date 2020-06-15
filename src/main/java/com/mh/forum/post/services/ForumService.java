@@ -12,10 +12,10 @@ import java.util.List;
 public interface ForumService {
 
 
-    PostDto addPost(AddPostDto addPostDto, String creator);
+    PostDto addPost(AddPostDto addPostDto, String creator, String idUser);
     /*  CommentDto addC(AddCommentDto addCommentDto, String creator);*/
 
-    PostDto addComment(String id, AddCommentDto addCommentDto, String creator);
+    PostDto addComment(String id, AddCommentDto addCommentDto,String creator, String idUser);
 
     PostDto getPost(String id);
 
@@ -27,14 +27,14 @@ public interface ForumService {
 
     Iterable<CommentDto> getCommentsByPost(String id);
 
-    Iterable<CommentDto> getCommentsByUser(String userEmail);
+    Iterable<CommentDto> getCommentsByUser(String idUser);
 
     int getLikesByPost(String id);
     PostDto deletePost(String id);
 
     PostDto updatePost(AddPostDto updatePostDto, String id);
-
-    boolean addLike(String id);
+    boolean addLike(String idPost, String idUser);
+    //boolean addLike(String id);
     boolean dislike(String id);
     //Category addCategory(Category category);
 

@@ -17,10 +17,11 @@ import javax.validation.constraints.NotBlank;
 //@JsonSerialize(using = ToStringSerializer.class)
 @Document(collection = "users")
 public class User {
-    //String idUser;
-    // @Id
-    @NotBlank
+
     @Id
+    String idUser;
+
+    @NotBlank
     String email;
 
     public String getPassword() {
