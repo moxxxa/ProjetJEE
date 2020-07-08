@@ -5,17 +5,31 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserDto {
 
-    String idUser;
-    String email;
-    String firstName;
-    String lastName;
-    //byte[] profilePicture;
-/*     Set<CommentDto> comments =new HashSet<CommentDto>(0);
-     Set<PostDto> posts = new HashSet<PostDto>(0);*/
+    private String idUser;
+    private String email;
+    private String firstName;
+    private String lastName;
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+
 }

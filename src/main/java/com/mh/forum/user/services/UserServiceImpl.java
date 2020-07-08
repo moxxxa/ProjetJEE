@@ -5,8 +5,10 @@ import com.mh.forum.exceptions.ForbiddenException;
 
 import com.mh.forum.exceptions.UserAuthenticationException;
 import com.mh.forum.exceptions.UserExistsException;
+import com.mh.forum.exceptions.UserNotFoundException;
 import com.mh.forum.user.dao.UserRepository;
 import com.mh.forum.user.dto.AddUserDto;
+import com.mh.forum.user.dto.PasswordDto;
 import com.mh.forum.user.dto.UserDto;
 import com.mh.forum.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ public class UserServiceImpl implements UserService {
                 .lastName(addUserDto.getLastName())
                 .build();
         userRepository.save(user);
-            return userToUserDto(user);
+        return userToUserDto(user);
     }
 
     public UserDto login(String token) {
@@ -58,6 +60,18 @@ public class UserServiceImpl implements UserService {
         return userToUserDto(user);
     }
 
+    public UserDto updateUser(UserDto userChange, String id) {
+        User user = userRepository.findUserByEmail(id);
+        if (null == user) {
+            throw new UserNotFoundException();
+        }
+        user.setEmail(userChange.getEmail());
+        user.setFirstName(userChange.getFirstName());
+        user.setLastName(userChange.getLastName());
+        userRepository.save(user);
+        return userToUserDto(user);
+    }
+
     @Override
     public UserDto deleteUser(String login) {
         return null;
@@ -71,5 +85,15 @@ public class UserServiceImpl implements UserService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .build();
+    }
+
+    public boolean updateUserPassword(PasswordDto newPassword, String id) {
+        User user = userRepository.findUserByEmail(id);
+        if (null == user) {
+            return false;
+        }
+        user.setPassword(newPassword.getPassword());
+        userRepository.save(user);
+        return true;
     }
 }

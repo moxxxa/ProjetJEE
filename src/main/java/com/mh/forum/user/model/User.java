@@ -6,9 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 
-
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -38,9 +35,42 @@ public class User {
     @NotBlank
     //@Size(max = 120)
             String lastName;
-    // byte[] profilePicture;
-/*    Set<Comment> comments = new HashSet<Comment>(0);
-    Set<Post> posts = new HashSet<Post>(0);*/
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
 
 }
