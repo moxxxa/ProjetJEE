@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 //@JsonSerialize(using = ToStringSerializer.class)
 @Document(collection = "users")
-public class User {
+public class  User {
 
     @Id
     String idUser;

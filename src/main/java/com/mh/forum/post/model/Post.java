@@ -39,7 +39,8 @@ public class Post {
     List<Like> likes;
     @Setter
     String category;
-
+    @Setter
+    double collectes;
 
     public Post(String subject, String content, String category, String creator, String idUser) {
         this.idUser = idUser;
@@ -51,9 +52,16 @@ public class Post {
         likes = new ArrayList<Like>();
         //likes = new HashSet<Like>(0);
         this.category = category;
+        collectes = 0.0;
 
     }
 
+
+
+    public double addCollect(double collectes) {
+
+        return this.collectes += collectes;
+    }
     public void addLike() {
         likesCount++;
     }

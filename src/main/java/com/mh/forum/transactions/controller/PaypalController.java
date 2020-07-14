@@ -1,5 +1,6 @@
 package com.mh.forum.transactions.controller;
 
+import com.mh.forum.post.services.ForumService;
 import com.mh.forum.transactions.model.Order;
 import com.mh.forum.transactions.services.PaypalService;
 import com.paypal.api.payments.Links;
@@ -17,6 +18,8 @@ import java.util.List;
 public class PaypalController {
 
     @Autowired
+    ForumService forumService;
+    @Autowired
     PaypalService service;
 
     public static final String SUCCESS_URL = "pay/success";
@@ -28,8 +31,34 @@ public class PaypalController {
         return "home";
     }
 
+    @PostMapping("/pay/{idPost}")
+    public String payment(@RequestBody Order order,@PathVariable String idPost) {
+        try {
+            System.out.println("*************get post par id***********"+ forumService.addCollectes(idPost,order.getPrice()));
+            Payment payment = service.createPayment(
+                    order.getPrice(),
+                    order.getCurrency(),
+                    order.getMethod(),
+                    order.getIntent(),
+                    //order.getDescription(),
+                    "http://localhost:8080/" + CANCEL_URL,
+                    "http://localhost:8080/" + SUCCESS_URL
+            );
+            for (Links link : payment.getLinks()) {
+                if (link.getRel().equals("approval_url")) {
+                    return "redirect:" + link.getHref();
+                }
+            }
+
+        } catch (PayPalRESTException e) {
+
+            e.printStackTrace();
+        }
+        return "redirect:/";
+    }
+
 //    @PostMapping("/pay")
-//    public String payment(@RequestBody Order order) {
+//    public String payment(@ModelAttribute("order") Order order) {
 //        try {
 //            Payment payment = service.createPayment(
 //                    order.getPrice(),
@@ -52,31 +81,6 @@ public class PaypalController {
 //        }
 //        return "redirect:/";
 //    }
-
-    @PostMapping("/pay")
-    public String payment(@ModelAttribute("order") Order order) {
-        try {
-            Payment payment = service.createPayment(
-                    order.getPrice(),
-                    order.getCurrency(),
-                    order.getMethod(),
-                    order.getIntent(),
-                    //order.getDescription(),
-                    "http://localhost:8080/" + CANCEL_URL,
-                    "http://localhost:8080/" + SUCCESS_URL
-            );
-            for (Links link : payment.getLinks()) {
-                if (link.getRel().equals("approval_url")) {
-                    return "redirect:" + link.getHref();
-                }
-            }
-
-        } catch (PayPalRESTException e) {
-
-            e.printStackTrace();
-        }
-        return "redirect:/";
-    }
 
     @GetMapping(value = CANCEL_URL)
     public String cancelPay() {
