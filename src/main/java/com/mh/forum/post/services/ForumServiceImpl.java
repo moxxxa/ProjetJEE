@@ -61,6 +61,15 @@ public class ForumServiceImpl implements ForumService {
     }*/
 
     @Override
+    public PostDto addCollectes(String id, double collect) {
+        Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+        post.addCollect(collect);
+        forumRepository.save(post);
+        return convertToPostDto(post);
+    }
+
+
+    @Override
     public PostDto addComment(String id, AddCommentDto addCommentDto, String creator, String idUser) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
         Comment comment = new Comment(idUser, creator, addCommentDto.getContent(), addCommentDto.getOwner());
@@ -203,6 +212,7 @@ public class ForumServiceImpl implements ForumService {
                 .comments(post.getComments().stream().map(this::convertToCommentDto).collect(Collectors.toList()))
                 .category(post.getCategory())
                 .likes(post.getLikes().stream().map(this::convertToLikeDto).collect(Collectors.toList()))
+                .collectes(post.getCollectes())
                 .build();
     }
 

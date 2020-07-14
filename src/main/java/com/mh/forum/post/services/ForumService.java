@@ -37,7 +37,7 @@ public interface ForumService {
     //boolean addLike(String id);
     boolean dislike(String id);
     //Category addCategory(Category category);
-
+    PostDto addCollectes(String id, double collect);
     List<Category> getCategories();
 
 
