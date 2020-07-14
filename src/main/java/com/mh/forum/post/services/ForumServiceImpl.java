@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ForumServiceImpl implements ForumService {
 
@@ -52,10 +53,18 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
+    public PostDto addCollectes(String id, double collect) {
+        Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+        post.addCollect(collect);
+        forumRepository.save(post);
+        return convertToPostDto(post);
+    }
+
+    @Override
     public PostDto addComment(String id, AddCommentDto addCommentDto, String creator, String idUser, String owner) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        System.out.println("creator =" +  creator);
         Comment comment = new Comment(idUser, creator, addCommentDto.getContent(), owner);
+        System.out.println("*************comment in service ***********" + comment);
         post.addComment(comment);
         forumRepository.save(post);
         return convertToPostDto(post);
@@ -164,6 +173,10 @@ public class ForumServiceImpl implements ForumService {
         }
         return false;
     }
+    /*@Override
+    public Category addCategory(Category category) {
+        return categoryRepository.save(category);
+    }*/
 
     @Override
     public List<Category> getCategories() {

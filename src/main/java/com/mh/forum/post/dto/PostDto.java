@@ -29,4 +29,5 @@ public class PostDto {
     //Set<Like> likes;
     List<LikeDto> likes;
     String category;
+    double collectes;
 }

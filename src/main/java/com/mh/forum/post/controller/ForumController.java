@@ -42,6 +42,7 @@ public class ForumController {
 
     @PutMapping("/post/{id}/comment")
     public ResponseEntity<PostDto> addComment(@PathVariable String id, @RequestBody AddCommentDto addCommentDto, @RequestHeader("Authorization") String token) {
+        System.out.println("comment received");
         UserDto userDto = userService.findUserByToken(userConfig.extractToken(token));
         if (null != userDto) {
             return new ResponseEntity<PostDto>(
