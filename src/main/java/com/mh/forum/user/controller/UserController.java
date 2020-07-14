@@ -1,5 +1,6 @@
 package com.mh.forum.user.controller;
 
+import com.mh.forum.configuration.UserConfig;
 import com.mh.forum.mailNotifyer.MailSender.Sender;
 import com.mh.forum.mailNotifyer.MessageFactory;
 import com.mh.forum.mailNotifyer.SubjectFactory;
@@ -13,14 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private UserConfig userConfig;
 
     @Autowired
     UserService userService;
@@ -29,7 +30,7 @@ public class UserController {
     Sender sender;
 
     @PostMapping("/create")
-    public UserDto create(@RequestBody AddUserDto addUserDto) {
+    public UserDto create(@RequestBody AddUserDto addUserDto) throws NoSuchAlgorithmException {
         UserDto createdUser = userService.addUser(addUserDto);
         try {
             sender.sendMail(createdUser.getEmail(), MessageFactory.welcomeMessage(), SubjectFactory.subject("Subscription"));
@@ -40,31 +41,31 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserDto login(@RequestHeader("Authorization") String token) {
+    public UserDto login(@RequestHeader("Authorization") String token) throws NoSuchAlgorithmException{
         return userService.login(token);
     }
 
-    @PostMapping("/update/{idUser}")
-    public UserDto updateUser(@RequestBody UserDto userChange, @PathVariable("idUser") String idUser) {
-        UserDto updatedUser = userService.updateUser(userChange, idUser);
+    @PostMapping("/update")
+    public UserDto updateUser(@RequestBody UserDto userChange, @RequestHeader("Authorization") String token) {
+        UserDto updatedUser = userService.updateUser(userChange, userConfig.extractToken(token));
         try {
             sender.sendMail(updatedUser.getEmail(), MessageFactory.accountUpdatedMessage(), SubjectFactory.subject("Personnal informations"));
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-        return userService.updateUser(userChange, idUser);
+        return updatedUser;
     }
 
-    @PostMapping("/update-password/{idUser}")
-    public ResponseEntity updateUserPassword(@RequestBody PasswordDto newPassword, @PathVariable("idUser") String idUser) {
-        Boolean result = userService.updateUserPassword(newPassword, idUser);
-        if (result) {
+    @PostMapping("/update-password")
+    public ResponseEntity updateUserPassword(@RequestBody PasswordDto newPassword, @RequestHeader("Authorization") String token) {
+        UserDto userResult = userService.updateUserPassword(newPassword, userConfig.extractToken(token));
+        if (userResult != null) {
             try {
-                sender.sendMail(idUser, MessageFactory.passwordChangeMessage(), SubjectFactory.subject("Password"));
+                sender.sendMail(userResult.getEmail(), MessageFactory.passwordChangeMessage(), SubjectFactory.subject("Password"));
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseEntity((result == true) ? HttpStatus.ACCEPTED : HttpStatus.NOT_FOUND);
+        return new ResponseEntity((userResult != null) ? HttpStatus.ACCEPTED : HttpStatus.NOT_FOUND);
     }
 }

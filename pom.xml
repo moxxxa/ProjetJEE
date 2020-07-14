@@ -89,6 +89,10 @@
             <artifactId>spring-context-support</artifactId>
             <version>5.2.7.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

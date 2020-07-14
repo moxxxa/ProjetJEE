@@ -10,20 +10,13 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @ToString
 @Builder
-//@JsonInclude(JsonInclude.Include.NON_NULL)
-//@JsonSerialize(using = ToStringSerializer.class)
 @Document(collection = "users")
 public class User {
-
     @Id
     String idUser;
 
     @NotBlank
     String email;
-
-    public String getPassword() {
-        return password;
-    }
 
     @NotBlank
     //@Size(max = 120)
@@ -35,6 +28,9 @@ public class User {
     @NotBlank
     //@Size(max = 120)
             String lastName;
+
+    @NotBlank
+            String token;
 
     public String getIdUser() {
         return idUser;
@@ -71,6 +67,14 @@ public class User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getToken() { return token; }
+
+    public void setToken(String token) { this.token = token; }
 
 
 }

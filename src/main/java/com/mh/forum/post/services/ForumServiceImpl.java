@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//import org.springframework.security.crypto.password.PasswordEncoder;
-
 @Service
 public class ForumServiceImpl implements ForumService {
 
@@ -53,18 +51,11 @@ public class ForumServiceImpl implements ForumService {
         return convertToPostDto(post);
     }
 
-  /*  @Override
-    public CommentDto addC(AddCommentDto addCommentDto, String creator) {
-        Comment comment = new Comment(creator, addCommentDto.getContent());
-        comment = commentRepositry.save(comment);
-        return convertToCommentDto(comment);
-    }*/
-
     @Override
-    public PostDto addComment(String id, AddCommentDto addCommentDto, String creator, String idUser) {
+    public PostDto addComment(String id, AddCommentDto addCommentDto, String creator, String idUser, String owner) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-        Comment comment = new Comment(idUser, creator, addCommentDto.getContent(), addCommentDto.getOwner());
-        System.out.println("*************comment in service ***********" + comment);
+        System.out.println("creator =" +  creator);
+        Comment comment = new Comment(idUser, creator, addCommentDto.getContent(), owner);
         post.addComment(comment);
         forumRepository.save(post);
         return convertToPostDto(post);
@@ -112,13 +103,6 @@ public class ForumServiceImpl implements ForumService {
                 .collect(Collectors.toList());
     }
 
-    /*
-        @Override
-        public Iterable<CommentDto> getLikesByPost(String id) {
-            Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
-            Set<Comment> comments = post.getComments();
-            return comments.stream().map(this::convertToCommentDto).collect(Collectors.toList());
-        }*/
     @Override
     public int getLikesByPost(String id) {
         Post post = forumRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
@@ -180,10 +164,6 @@ public class ForumServiceImpl implements ForumService {
         }
         return false;
     }
-    /*@Override
-    public Category addCategory(Category category) {
-        return categoryRepository.save(category);
-    }*/
 
     @Override
     public List<Category> getCategories() {

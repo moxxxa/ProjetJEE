@@ -14,6 +14,7 @@ public class UserDto {
     private String email;
     private String firstName;
     private String lastName;
+    private String token;
 
     public String getIdUser() {
         return idUser;
@@ -31,5 +32,6 @@ public class UserDto {
         return lastName;
     }
 
+    public String getToken() { return token; }
 
 }

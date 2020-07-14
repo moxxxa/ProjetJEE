@@ -5,8 +5,6 @@ import com.mh.forum.exceptions.UserAuthenticationException;
 import com.mh.forum.user.services.UserAuthentication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jmx.export.annotation.ManagedResource;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Base64;
 
@@ -19,7 +17,6 @@ public class UserConfig {
     public UserAuthentication tokenDecode(String token) {
         try {
             int pos = token.indexOf(" ");
-
             token = token.substring(pos + 1);
             String credential = new String(Base64.getDecoder().decode(token));
             String[] credentials = credential.split(":");
@@ -28,8 +25,8 @@ public class UserConfig {
             throw new UserAuthenticationException();
         }
     }
-/*    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }*/
+
+    public String extractToken(String token) {
+        return token.substring(token.indexOf(" ") + 1);
+    }
 }

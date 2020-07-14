@@ -15,7 +15,7 @@ public interface ForumService {
     PostDto addPost(AddPostDto addPostDto, String creator, String idUser);
     /*  CommentDto addC(AddCommentDto addCommentDto, String creator);*/
 
-    PostDto addComment(String id, AddCommentDto addCommentDto,String creator, String idUser);
+    PostDto addComment(String id, AddCommentDto addCommentDto, String creator, String idUser, String owner);
 
     PostDto getPost(String id);
 

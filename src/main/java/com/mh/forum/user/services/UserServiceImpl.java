@@ -1,5 +1,6 @@
 package com.mh.forum.user.services;
 
+import com.mh.forum.Hash.Md5Hash;
 import com.mh.forum.configuration.UserConfig;
 import com.mh.forum.exceptions.ForbiddenException;
 
@@ -14,7 +15,8 @@ import com.mh.forum.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,23 +29,24 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;*/
 
     @Override
-    public UserDto addUser(AddUserDto addUserDto) {
+    public UserDto addUser(AddUserDto addUserDto) throws NoSuchAlgorithmException {
         //to correct
         if (userRepository.existsById(addUserDto.getEmail())){
             throw new UserExistsException();
         }
-       // String hashPasswd = passwordEncoder.encode(addUserDto.getPassword());
+        String token = UUID.randomUUID().toString() + Md5Hash.hashThis(addUserDto.getPassword());
         User user = User.builder()
                 .email(addUserDto.getEmail())
-                .password(addUserDto.getPassword())
+                .password(Md5Hash.hashThis(addUserDto.getPassword()))
                 .firstName(addUserDto.getFirstName())
                 .lastName(addUserDto.getLastName())
+                .token(token)
                 .build();
         userRepository.save(user);
         return userToUserDto(user);
     }
 
-    public UserDto login(String token) {
+    public UserDto login(String token) throws NoSuchAlgorithmException {
 
         UserAuthentication userAuthentication = userConfig.tokenDecode(token);
 
@@ -53,15 +56,14 @@ public class UserServiceImpl implements UserService {
             throw new UserAuthenticationException();
         }
 
-        if (!userAuthentication.getPassword().equals(user.getPassword())) {
+        if (!Md5Hash.hashThis(userAuthentication.getPassword()).equals(user.getPassword())) {
             throw new ForbiddenException();
         }
-        // User user = userRepository.findById(idUser).orElseThrow(() -> new UserNotFoundException(idUser));;
         return userToUserDto(user);
     }
 
-    public UserDto updateUser(UserDto userChange, String id) {
-        User user = userRepository.findUserByEmail(id);
+    public UserDto updateUser(UserDto userChange, String token) {
+        User user = userRepository.findUserByToken(token);
         if (null == user) {
             throw new UserNotFoundException();
         }
@@ -84,16 +86,22 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .token(user.getToken())
                 .build();
     }
 
-    public boolean updateUserPassword(PasswordDto newPassword, String id) {
-        User user = userRepository.findUserByEmail(id);
+    public UserDto updateUserPassword(PasswordDto newPassword, String token) {
+        User user = userRepository.findUserByToken(token);
         if (null == user) {
-            return false;
+            return null;
         }
         user.setPassword(newPassword.getPassword());
         userRepository.save(user);
-        return true;
+        return userToUserDto(user);
+    }
+
+    public UserDto findUserByToken(String token) {
+        User user = userRepository.findUserByToken(token);
+        return userToUserDto(user);
     }
 }

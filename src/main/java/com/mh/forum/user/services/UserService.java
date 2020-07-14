@@ -6,17 +6,21 @@ import com.mh.forum.user.dto.UserDto;
 import com.mh.forum.user.model.User;
 import org.springframework.http.ResponseEntity;
 
+import java.security.NoSuchAlgorithmException;
+
 public interface UserService {
 
-    UserDto addUser(AddUserDto addUserDto);
+    UserDto addUser(AddUserDto addUserDto) throws NoSuchAlgorithmException;
 
-    UserDto login(String idUser);
+    UserDto login(String idUser) throws NoSuchAlgorithmException;
 
     UserDto deleteUser(String login);
 
-    UserDto updateUser(UserDto userChange, String id);
+    UserDto updateUser(UserDto userChange, String token);
 
-    boolean updateUserPassword(PasswordDto newPassword, String id);
+    UserDto updateUserPassword(PasswordDto newPassword, String token);
+
+    UserDto findUserByToken(String token);
 
 
 }
