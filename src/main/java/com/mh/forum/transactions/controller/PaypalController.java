@@ -38,8 +38,8 @@ public class PaypalController {
             Payment payment = service.createPayment(
                     order.getPrice(),
                     order.getCurrency(),
-                    order.getMethod(),
-                    order.getIntent(),
+                   // order.getMethod(),
+                   // order.getIntent(),
                     //order.getDescription(),
                     "http://localhost:8080/" + CANCEL_URL,
                     "http://localhost:8080/" + SUCCESS_URL

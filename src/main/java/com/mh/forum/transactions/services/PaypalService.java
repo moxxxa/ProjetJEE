@@ -31,7 +31,7 @@ public class PaypalService {
     @Autowired
     DealingRepository dealingRepository;
 
-    public Payment createPayment(Double total, String currency, String method, String intent, String cancelUrl, String successUrl) throws PayPalRESTException {
+    public Payment createPayment(Double total, String currency, String cancelUrl, String successUrl) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
         total = new BigDecimal(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
@@ -45,10 +45,10 @@ public class PaypalService {
         transactions.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod(method.toString());
+        //payer.setPaymentMethod(method.toString());
 
         Payment payment = new Payment();
-        payment.setIntent(intent.toString());
+       // payment.setIntent(intent.toString());
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
