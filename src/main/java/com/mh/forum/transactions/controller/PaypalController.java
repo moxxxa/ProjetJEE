@@ -57,31 +57,6 @@ public class PaypalController {
         return "redirect:/";
     }
 
-//    @PostMapping("/pay")
-//    public String payment(@ModelAttribute("order") Order order) {
-//        try {
-//            Payment payment = service.createPayment(
-//                    order.getPrice(),
-//                    order.getCurrency(),
-//                    order.getMethod(),
-//                    order.getIntent(),
-//                    //order.getDescription(),
-//                    "http://localhost:8080/" + CANCEL_URL,
-//                    "http://localhost:8080/" + SUCCESS_URL
-//            );
-//            for (Links link : payment.getLinks()) {
-//                if (link.getRel().equals("approval_url")) {
-//                    return "redirect:" + link.getHref();
-//                }
-//            }
-//
-//        } catch (PayPalRESTException e) {
-//
-//            e.printStackTrace();
-//        }
-//        return "redirect:/";
-//    }
-
     @GetMapping(value = CANCEL_URL)
     public String cancelPay() {
         return "cancel";
@@ -93,16 +68,6 @@ public class PaypalController {
         try {
             Payment payment = service.executePayment(paymentId, payerId);
             transactions = Collections.singletonList(payment.toJSON());
-           // System.out.println("payment.toJSON()"+ payment.toJSON());
-//
-//            System.out.println("*************getPotentialPayerInfo***********"+ payment.getPotentialPayerInfo());
-//            System.out.println("*************getPayer***********"+ payment.getPayer().getPayerInfo());
-//            System.out.println("*************getPayee***********"+ payment.getPayee());
-//            System.out.println("*************getPaymentInstruction***********"+ payment.getPaymentInstruction());
-//            System.out.println("*************getPaymentInstruction***********"+ payment.getPaymentInstruction());
-//            System.out.println("*************getTransactions***********"+ payment.getTransactions());
-
-
 
             if (payment.getState().equals("approved")) {
                 return "success";
@@ -114,30 +79,3 @@ public class PaypalController {
     }
 
 }
-
-
-
-//@PostMapping("/pay")
-//	public String payment(@RequestBody Order order) {
-//		try {
-//			Payment payment = service.createPayment(
-//					order.getPrice(),
-//					order.getCurrency(),
-//					order.getMethod(),
-//					order.getIntent(),
-//					//order.getDescription(),
-//					"http://localhost:9090/" + CANCEL_URL,
-//					"http://localhost:9090/" + SUCCESS_URL
-//			);
-//			for (Links link : payment.getLinks()) {
-//				if (link.getRel().equals("approval_url")) {
-//					return "redirect:" + link.getHref();
-//				}
-//			}
-//
-//		} catch (PayPalRESTException e) {
-//
-//			e.printStackTrace();
-//		}
-//		return "redirect:/";
-//	}
